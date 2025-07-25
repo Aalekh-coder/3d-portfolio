@@ -5,7 +5,7 @@ const Hero = () => {
   return (
     <section className='h-dvh relative text-white-50 px-5 md:p-0' id="home">
 
-<GradientSphere sphere1Class={""} />
+<GradientSphere sphere1Class={"gradient-sphere sphere-1"} sphere2Class={"gradient-sphere sphere-2"}  />
 
         <div className="w-full h-full flex-center ">
             <div className="container relative w-full h-full ">
