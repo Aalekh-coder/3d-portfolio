@@ -39,7 +39,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="w-full h-full absolute inset-0 border-2 border-red-500">
+      <div className="w-full h-full absolute inset-0">
         <HeroExperience />
       </div>
     </section>

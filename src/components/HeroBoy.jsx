@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGraph } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
 import * as THREE from "three";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
 export function HeroBoy(props) {
   const { scene } = useGLTF("/models/boy.glb");
@@ -12,22 +14,43 @@ export function HeroBoy(props) {
   const group = useRef();
   const mouse = useRef(new THREE.Vector2());
 
-  useEffect(() => {
-    const handleMouseMove = (e) => {
+  const [isIntroAnimation, setIsIntroAnimation] = useState(false);
+
+  useGSAP(() => {
+  if(!isIntroAnimation){
+      gsap.fromTo(
+      group.current.rotation,
+      { y: Math.PI },
+      {
+        y: 0,
+        delay: 0.5,
+        duration: 1.5,
+        ease: "expo.inOut",
+        onComplete: () => {
+          setIsIntroAnimation(true);
+        },
+      }
+    );
+  }
+
+    if(isIntroAnimation){
+      const handleMouseMove = (e) => {
       const { innerWidth, innerHeight } = window;
 
       mouse.current.x = (e.clientX / innerWidth) * 2 - 1;
-      mouse.current.y = -(e.clientX / innerWidth) * 2 + 1;
+      mouse.current.y = -(e.clientY / innerHeight) * 2 + 1;
 
       const target = new THREE.Vector3(mouse.current.x, mouse.current.y, 1);
-      
-      group.current.getObjectByName("Head")?.lookAt(target)
+      group.current.getObjectByName("Head")?.lookAt(target);
+      group.current.rotation.y = target.x * 0.5;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+    }
+    
+  }, [isIntroAnimation]);
 
   return (
     <group ref={group} {...props} dispose={null}>
